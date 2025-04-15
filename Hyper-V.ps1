@@ -1,34 +1,34 @@
-#ÏÈÔÚ¹ÜÀíÔ±ÏÂÖ´ĞĞÏÂÃæÕâ¾äÃüÁî£¬·ñÔò»á±¨´í
+#å…ˆåœ¨ç®¡ç†å‘˜ä¸‹æ‰§è¡Œä¸‹é¢è¿™å¥å‘½ä»¤ï¼Œå¦åˆ™ä¼šæŠ¥é”™
 #Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 
-# ¼ÓÔØ Windows Forms ³ÌĞò¼¯
+# åŠ è½½ Windows Forms ç¨‹åºé›†
 Add-Type -AssemblyName System.Windows.Forms
 
-# ¼ì²é¹ÜÀíÔ±È¨ÏŞ
+# æ£€æŸ¥ç®¡ç†å‘˜æƒé™
 Function Test-Admin {
     $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($currentUser)
     return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
-# Èç¹û²»ÊÇ¹ÜÀíÔ±È¨ÏŞ£¬ÖØĞÂÒÔ¹ÜÀíÔ±È¨ÏŞÔËĞĞ½Å±¾
+# å¦‚æœä¸æ˜¯ç®¡ç†å‘˜æƒé™ï¼Œé‡æ–°ä»¥ç®¡ç†å‘˜æƒé™è¿è¡Œè„šæœ¬
 if (-not (Test-Admin)) {
-    [System.Windows.Forms.MessageBox]::Show("½Å±¾ĞèÒªÒÔ¹ÜÀíÔ±È¨ÏŞÔËĞĞ¡£ÏÖÔÚ½«ÒÔ¹ÜÀíÔ±È¨ÏŞÖØĞÂÆô¶¯¡£", "È¨ÏŞ²»×ã", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+    [System.Windows.Forms.MessageBox]::Show("è„šæœ¬éœ€è¦ä»¥ç®¡ç†å‘˜æƒé™è¿è¡Œã€‚ç°åœ¨å°†ä»¥ç®¡ç†å‘˜æƒé™é‡æ–°å¯åŠ¨ã€‚", "æƒé™ä¸è¶³", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
     Start-Process -FilePath "powershell.exe" -ArgumentList "-File `"$($MyInvocation.MyCommand.Path)`"" -Verb RunAs
     exit
 }
 
-# µ¯³öÄÚ´æÑ¡Ôñ¶Ô»°¿ò
+# å¼¹å‡ºå†…å­˜é€‰æ‹©å¯¹è¯æ¡†
 Function Select-MemorySize {
     $form = New-Object System.Windows.Forms.Form
-    $form.Text = "Ñ¡ÔñÄÚ´æ´óĞ¡ (MB)"
+    $form.Text = "é€‰æ‹©å†…å­˜å¤§å° (MB)"
     $form.Width = 300
     $form.Height = 200
     $form.StartPosition = "CenterScreen"
 
     $label = New-Object System.Windows.Forms.Label
-    $label.Text = "ÇëÊäÈëĞéÄâ»úÄÚ´æ´óĞ¡ (Ä¬ÈÏ 2048 MB):"
+    $label.Text = "è¯·è¾“å…¥è™šæ‹Ÿæœºå†…å­˜å¤§å° (é»˜è®¤ 2048 MB):"
     $label.AutoSize = $true
     $label.Top = 20
     $label.Left = 20
@@ -42,7 +42,7 @@ Function Select-MemorySize {
     $form.Controls.Add($textBox)
 
     $okButton = New-Object System.Windows.Forms.Button
-    $okButton.Text = "È·¶¨"
+    $okButton.Text = "ç¡®å®š"
     $okButton.Top = 90
     $okButton.Left = 20
     $okButton.Add_Click({ 
@@ -55,34 +55,34 @@ Function Select-MemorySize {
     return $form.Tag
 }
 
-# »ñÈ¡ÓÃ»§Ñ¡ÔñµÄÄÚ´æ´óĞ¡
+# è·å–ç”¨æˆ·é€‰æ‹©çš„å†…å­˜å¤§å°
 $vmMemoryInput = Select-MemorySize
 if (-not [int]::TryParse($vmMemoryInput, [ref]$null) -or [int]$vmMemoryInput -le 2048) {
-    Write-Host "ÎŞĞ§µÄÄÚ´æÊäÈë£¬Ê¹ÓÃÄ¬ÈÏÖµ 2048 MB¡£" -ForegroundColor Yellow
+    Write-Host "æ— æ•ˆçš„å†…å­˜è¾“å…¥ï¼Œä½¿ç”¨é»˜è®¤å€¼ 2048 MBã€‚" -ForegroundColor Yellow
     $vmMemory = 2048
 } else {
     $vmMemory = [int]$vmMemoryInput
 }
 
-Write-Host "ÓÃ»§Ñ¡ÔñµÄÄÚ´æ´óĞ¡Îª $vmMemory MB¡£"
+Write-Host "ç”¨æˆ·é€‰æ‹©çš„å†…å­˜å¤§å°ä¸º $vmMemory MBã€‚"
 
-# Step 1: ¼ì²é²¢°²×° Hyper-V ¹¦ÄÜ
-Write-Host "¼ì²é²¢°²×° Hyper-V ¹¦ÄÜ..."
+# Step 1: æ£€æŸ¥å¹¶å®‰è£… Hyper-V åŠŸèƒ½
+Write-Host "æ£€æŸ¥å¹¶å®‰è£… Hyper-V åŠŸèƒ½..."
 $featureName = "Microsoft-Hyper-V-All"
 
-# ¼ì²é Hyper-V ÊÇ·ñÒÑÆôÓÃ
+# æ£€æŸ¥ Hyper-V æ˜¯å¦å·²å¯ç”¨
 $hyperVFeature = Get-WindowsOptionalFeature -Online -FeatureName $featureName
 if ($hyperVFeature.State -ne "Enabled") {
-    Write-Host "Hyper-V Î´ÆôÓÃ£¬ÕıÔÚÆôÓÃ..."
+    Write-Host "Hyper-V æœªå¯ç”¨ï¼Œæ­£åœ¨å¯ç”¨..."
     Enable-WindowsOptionalFeature -Online -FeatureName $featureName -All -NoRestart
-    Write-Host "Hyper-V ÒÑÆôÓÃ£¬ÇëÖØÆôÏµÍ³ÒÔÉúĞ§¡£"
+    Write-Host "Hyper-V å·²å¯ç”¨ï¼Œè¯·é‡å¯ç³»ç»Ÿä»¥ç”Ÿæ•ˆã€‚"
     exit
 } else {
-    Write-Host "Hyper-V ÒÑÆôÓÃ¡£"
+    Write-Host "Hyper-V å·²å¯ç”¨ã€‚"
 }
 
-# Step 2: ÏÂÔØ Home Assistant OS ¾µÏñ£¨Ê¹ÓÃ¶àÏß³ÌÏÂÔØ¼ÓËÙ£©
-Write-Host "ÕıÔÚÏÂÔØ Home Assistant OS ¾µÏñ... (¶àÏß³Ì¼ÓËÙÏÂÔØÖĞ£¬ÇëÄÍĞÄµÈ´ı¡£¡£¡£)"
+# Step 2: ä¸‹è½½ Home Assistant OS é•œåƒï¼ˆä½¿ç”¨å¤šçº¿ç¨‹ä¸‹è½½åŠ é€Ÿï¼‰
+Write-Host "æ­£åœ¨ä¸‹è½½ Home Assistant OS é•œåƒ... (å¤šçº¿ç¨‹åŠ é€Ÿä¸‹è½½ä¸­ï¼Œè¯·è€å¿ƒç­‰å¾…ã€‚ã€‚ã€‚)"
 
 $urls = @(
     "https://github.com/home-assistant/operating-system/releases/download/14.1/haos_ova-14.1.vhdx.zip"
@@ -90,15 +90,15 @@ $urls = @(
 
 $downloadDir = "C:\HyperV\HomeAssistant"
 
-# ´´½¨ÏÂÔØÄ¿Â¼£¨Èç¹û²»´æÔÚµÄ»°£©
+# åˆ›å»ºä¸‹è½½ç›®å½•ï¼ˆå¦‚æœä¸å­˜åœ¨çš„è¯ï¼‰
 if (!(Test-Path -Path $downloadDir)) {
     New-Item -ItemType Directory -Path $downloadDir | Out-Null
 }
 
-# ¶¨ÒåÏÂÔØÈÎÎñ
+# å®šä¹‰ä¸‹è½½ä»»åŠ¡
 $jobs = @()
 
-# Æô¶¯¶à¸öÏÂÔØÈÎÎñ
+# å¯åŠ¨å¤šä¸ªä¸‹è½½ä»»åŠ¡
 foreach ($url in $urls) {
     $outputPath = Join-Path $downloadDir (Split-Path $url -Leaf)
 
@@ -106,81 +106,81 @@ foreach ($url in $urls) {
         param ($url, $outputPath)
         
         try {
-            Write-Host "ÕıÔÚÏÂÔØ: $url"
+            Write-Host "æ­£åœ¨ä¸‹è½½: $url"
             Invoke-WebRequest -Uri $url -OutFile $outputPath -UseBasicParsing
-            Write-Host "ÏÂÔØÍê³É: $outputPath"
+            Write-Host "ä¸‹è½½å®Œæˆ: $outputPath"
         } catch {
-            Write-Host "ÏÂÔØÊ§°Ü: $url"
+            Write-Host "ä¸‹è½½å¤±è´¥: $url"
         }
     } -ArgumentList $url, $outputPath
 }
 
-# µÈ´ıËùÓĞÏÂÔØÈÎÎñÍê³É
+# ç­‰å¾…æ‰€æœ‰ä¸‹è½½ä»»åŠ¡å®Œæˆ
 $jobs | ForEach-Object {
     Wait-Job -Job $_
     Remove-Job -Job $_
 }
 
-Write-Host "ËùÓĞÎÄ¼şÏÂÔØÍê³É¡£"
+Write-Host "æ‰€æœ‰æ–‡ä»¶ä¸‹è½½å®Œæˆã€‚"
 
-# Step 3: ½âÑ¹Ëõ¾µÏñÎÄ¼ş
-Write-Host "ÕıÔÚ½âÑ¹Ëõ Home Assistant OS ¾µÏñ..."
+# Step 3: è§£å‹ç¼©é•œåƒæ–‡ä»¶
+Write-Host "æ­£åœ¨è§£å‹ç¼© Home Assistant OS é•œåƒ..."
 $extractPath = "C:\HyperV\HomeAssistant"
 Expand-Archive -Path "$downloadDir\haos_ova-14.1.vhdx.zip" -DestinationPath $extractPath -Force
 $vhdxFile = Get-ChildItem -Path $extractPath -Filter "*.vhdx" | Select-Object -ExpandProperty FullName
-Write-Host "¾µÏñÎÄ¼şÒÑ½âÑ¹µ½: $vhdxFile"
+Write-Host "é•œåƒæ–‡ä»¶å·²è§£å‹åˆ°: $vhdxFile"
 
-# Step 4: ¼ì²é²¢´´½¨ĞéÄâ½»»»»ú
-Write-Host "¼ì²éĞéÄâ½»»»»ú..."
+# Step 4: æ£€æŸ¥å¹¶åˆ›å»ºè™šæ‹Ÿäº¤æ¢æœº
+Write-Host "æ£€æŸ¥è™šæ‹Ÿäº¤æ¢æœº..."
 $vmSwitch = "HomeAssistantSwitch"
 
 if (!(Get-VMSwitch -Name $vmSwitch -ErrorAction SilentlyContinue)) {
-    Write-Host "Î´ÕÒµ½Ä¬ÈÏ½»»»»ú£¬ÕıÔÚ´´½¨ĞÂĞéÄâ½»»»»ú..."
+    Write-Host "æœªæ‰¾åˆ°é»˜è®¤äº¤æ¢æœºï¼Œæ­£åœ¨åˆ›å»ºæ–°è™šæ‹Ÿäº¤æ¢æœº..."
     New-VMSwitch -Name $vmSwitch -SwitchType Internal | Out-Null
-    Write-Host "ÒÑ´´½¨ĞÂĞéÄâ½»»»»ú: $vmSwitch"
+    Write-Host "å·²åˆ›å»ºæ–°è™šæ‹Ÿäº¤æ¢æœº: $vmSwitch"
 } else {
-    Write-Host "Ä¬ÈÏ½»»»»úÒÑ´æÔÚ: $vmSwitch"
+    Write-Host "é»˜è®¤äº¤æ¢æœºå·²å­˜åœ¨: $vmSwitch"
 }
 Start-Process "virtmgmt.msc"
-[System.Windows.Forms.MessageBox]::Show("ĞèÒª½«ĞéÄâ½»»»»ú $vmSwitch ÉèÖÃÎªÍâ²¿£¬ÉèÖÃÍê±ÏÖ®ºóÔÙµãÈ·¶¨¡£ÇĞ¼ÇÇĞ¼ÇÇĞ¼Ç£¬·ñÔòµçÄÔ¶ËÎŞ·¨·ÃÎÊ£¬ĞŞ¸ÄÍêÖ®ºó²»ĞèÒª¹ØÃÅHyper-V½çÃæ", "ĞŞ¸Ä½»»»»ú", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
-# Step 5: ´´½¨ Hyper-V ĞéÄâ»ú²¢µ¼Èë¾µÏñ
-Write-Host "´´½¨ Hyper-V ĞéÄâ»ú..."
+[System.Windows.Forms.MessageBox]::Show("éœ€è¦å°†è™šæ‹Ÿäº¤æ¢æœº $vmSwitch è®¾ç½®ä¸ºå¤–éƒ¨ï¼Œè®¾ç½®å®Œæ¯•ä¹‹åå†ç‚¹ç¡®å®šã€‚åˆ‡è®°åˆ‡è®°åˆ‡è®°ï¼Œå¦åˆ™ç”µè„‘ç«¯æ— æ³•è®¿é—®ï¼Œä¿®æ”¹å®Œä¹‹åä¸éœ€è¦å…³é—¨Hyper-Vç•Œé¢", "ä¿®æ”¹äº¤æ¢æœº", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+# Step 5: åˆ›å»º Hyper-V è™šæ‹Ÿæœºå¹¶å¯¼å…¥é•œåƒ
+Write-Host "åˆ›å»º Hyper-V è™šæ‹Ÿæœº..."
 
 $vmName = "HomeAssistant"
 $memoryInBytes = $vmMemory * 1MB
 
-# ´´½¨ĞéÄâ»ú£¨²»Æô¶¯£©
+# åˆ›å»ºè™šæ‹Ÿæœºï¼ˆä¸å¯åŠ¨ï¼‰
 New-VM -Name $vmName -MemoryStartupBytes $memoryInBytes -SwitchName $vmSwitch -Generation 2 -Path "C:\HyperV\$vmName" | Out-Null
 Set-VMProcessor -VMName $vmName -Count 4
 
-# ¼ì²éĞéÄâ»úÊÇ·ñ³É¹¦´´½¨
+# æ£€æŸ¥è™šæ‹Ÿæœºæ˜¯å¦æˆåŠŸåˆ›å»º
 $vmExists = Get-VM -Name $vmName -ErrorAction SilentlyContinue
 if ($vmExists) {
-    Write-Host "ĞéÄâ»ú '$vmName' ´´½¨³É¹¦¡£"
+    Write-Host "è™šæ‹Ÿæœº '$vmName' åˆ›å»ºæˆåŠŸã€‚"
 
-    # »ñÈ¡ SCSI ¿ØÖÆÆ÷
+    # è·å– SCSI æ§åˆ¶å™¨
     $scsiController = Get-VMScsiController -VMName $vmName
 
-    # ¼ì²é SCSI ¿ØÖÆÆ÷ÊÇ·ñ³É¹¦´´½¨
+    # æ£€æŸ¥ SCSI æ§åˆ¶å™¨æ˜¯å¦æˆåŠŸåˆ›å»º
     if ($scsiController -and $scsiController.ControllerNumber -ne $null) {
-        # Á¬½ÓÓ²ÅÌµ½ SCSI ¿ØÖÆÆ÷
+        # è¿æ¥ç¡¬ç›˜åˆ° SCSI æ§åˆ¶å™¨
         
         Add-VMHardDiskDrive -VMName $vmName -ControllerType SCSI -ControllerNumber $scsiController.ControllerNumber -ControllerLocation 0 -Path $vhdxFile | Out-Null
 
-        # ÉèÖÃÆô¶¯Ë³ĞòÎªÓ²ÅÌ
+        # è®¾ç½®å¯åŠ¨é¡ºåºä¸ºç¡¬ç›˜
         Set-VMFirmware -VMName $vmName -FirstBootDevice (Get-VMHardDiskDrive -VMName $vmName) | Out-Null
 
-        Write-Host "ĞéÄâ»ú '$vmName' ÒÑ³É¹¦´´½¨²¢ÅäÖÃÍê³É£¬ÉĞÎ´Æô¶¯¡£"
+        Write-Host "è™šæ‹Ÿæœº '$vmName' å·²æˆåŠŸåˆ›å»ºå¹¶é…ç½®å®Œæˆï¼Œå°šæœªå¯åŠ¨ã€‚"
     } else {
-        Write-Host "SCSI ¿ØÖÆÆ÷´´½¨Ê§°Ü£¬Çë¼ì²é´íÎó¡£"
+        Write-Host "SCSI æ§åˆ¶å™¨åˆ›å»ºå¤±è´¥ï¼Œè¯·æ£€æŸ¥é”™è¯¯ã€‚"
 
     }
 } else {
-    Write-Host "ĞéÄâ»ú '$vmName' ´´½¨Ê§°Ü£¬Çë¼ì²é´íÎó¡£"
+    Write-Host "è™šæ‹Ÿæœº '$vmName' åˆ›å»ºå¤±è´¥ï¼Œè¯·æ£€æŸ¥é”™è¯¯ã€‚"
 
 }
 
-Write-Host "Íê³É£¡¿ÉÒÔÍ¨¹ı Hyper-V ¹ÜÀíÆ÷²é¿´ĞéÄâ»ú×´Ì¬¡£"
+Write-Host "å®Œæˆï¼å¯ä»¥é€šè¿‡ Hyper-V ç®¡ç†å™¨æŸ¥çœ‹è™šæ‹ŸæœºçŠ¶æ€ã€‚"
 
 
 Start-VM -Name '$vmName'
