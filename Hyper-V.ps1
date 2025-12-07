@@ -85,7 +85,7 @@ if ($hyperVFeature.State -ne "Enabled") {
 Write-Host "正在下载 Home Assistant OS 镜像... (多线程加速下载中，请耐心等待。。。)"
 
 $urls = @(
-    "https://github.com/home-assistant/operating-system/releases/download/14.1/haos_ova-14.1.vhdx.zip"
+    "https://ota.hasscn.top/16.3/haos_ova-16.3.vhdx.zip"
 )
 
 $downloadDir = "C:\HyperV\HomeAssistant"

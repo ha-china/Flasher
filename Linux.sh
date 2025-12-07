@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Set variables
-HA_OS_URL="OS_IMAGE_URL" # Replace with the actual URL of the Home Assistant OS image
+HA_OS_URL="https://ota.hasscn.top/16.3/haos_generic-x86-64-16.3.img.xz" # Replace with the actual URL of the Home Assistant OS image
 TARGET_DISK="/dev/sda" # Modify this to your target disk path
 
 # Ensure running as root
